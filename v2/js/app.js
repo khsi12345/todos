@@ -6,6 +6,8 @@ const allChecked = document.querySelector('#chk-allComplete');
 const selectTab = document.querySelector('.nav');
 const tabElement = document.querySelectorAll('.nav li');
 const activeTab = document.querySelector('#active');
+let clearCompletedCount = document.querySelector('#completedTodos');
+const clearBtn = document.querySelector('#btn-removeCompletedTodos');
 let state = 'all';
 
 function renderHTML() {
@@ -18,10 +20,9 @@ function renderHTML() {
   }
 
   else if (state === 'active') {
-    const activeList = todos.filter(function (todo) {
+    todos1 = todos.filter(function (todo) {
       return !todo.completed;
     });
-    todos1 = activeList;
     // console.log(activeList);
   } 
 
@@ -77,12 +78,31 @@ list.addEventListener('click', function (e) {
   }
 });
 
+function completedCount() { 
+  const completedCounts = todos.filter(function (todo) {
+    return todo.completed;
+  });
+  clearCompletedCount.textContent = completedCounts.length;
+  // clearCompletedCount = todos2.length;
+  console.dir(clearCompletedCount);
+}
+
+clearBtn.addEventListener('click', function (e) {
+  todos = todos.filter(function (todo) {
+    return !todo.completed;
+  });
+  clearCompletedCount.textContent = 0;
+  renderHTML();
+})
+
+
 list.addEventListener('change', function (e) {
   if (e.target.nodeName === 'INPUT') {
     todos = todos.map(function (todo) {
       return +e.target.id === todo.id ? Object.assign({}, todo, { completed: !todo.completed }) : todo;
     });
-    // console.log(todos);
+    // console.dir(e.target.checked);
+    completedCount();
     renderHTML();
   }
 });
@@ -121,8 +141,9 @@ selectTab.addEventListener('click', function (e) {
 
     if (sc.id === e.target.parentNode.id) {
       sc.classList.add('active');
-      state = sc.id;
-      // console.log(state);
+      state = e.target.parentNode.id;
+      console.dir(sc);
+      console.dir(e.target);
     }
   });
   renderHTML();
