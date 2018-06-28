@@ -6,11 +6,33 @@ const allChecked = document.querySelector('#chk-allComplete');
 const selectTab = document.querySelector('.nav');
 const tabElement = document.querySelectorAll('.nav li');
 const activeTab = document.querySelector('#active');
+let state = 'all';
 
 function renderHTML() {
   list.innerHTML = '';
+  let todos1 = [];
+  // all / active / comlete
 
-  todos.forEach(function (todo) {
+  if (state === 'all') {
+    todos1 = todos;
+  }
+
+  else if (state === 'active') {
+    const activeList = todos.filter(function (todo) {
+      return !todo.completed;
+    });
+    todos1 = activeList;
+    // console.log(activeList);
+  } 
+
+  else if (state === 'completed') {
+    todos1 = todos.filter(function (todo) {
+      return todo.completed;
+    });
+    // console.log(todos1);
+  }
+
+  todos1.forEach(function (todo) {
 
     const checked = todo.completed ? 'checked' : '';
 
@@ -56,10 +78,11 @@ list.addEventListener('click', function (e) {
 });
 
 list.addEventListener('change', function (e) {
-  if (e.target.nodeName === 'I') {
+  if (e.target.nodeName === 'INPUT') {
     todos = todos.map(function (todo) {
       return +e.target.id === todo.id ? Object.assign({}, todo, { completed: !todo.completed }) : todo;
     });
+    // console.log(todos);
     renderHTML();
   }
 });
@@ -76,19 +99,6 @@ allChecked.addEventListener('change', function (e) {
 });
 
 // All, Active, Completed 탭을 클릭하면 탭의 ul 요소에 li 요소의 class 속성을 동적으로 변경하는 함수.
-function tabSelect(e) {
-  tabElement.forEach(function (sc) {
-    // console.log(sc.id);
-    // console.dir(e.target.parentNode.id);
-    // console.log(sc);
-
-    sc.classList.remove('active');
-
-    if (sc.id === e.target.parentNode.id) {
-      sc.classList.add('active');
-    }
-  });
-}
 
 selectTab.addEventListener('click', function (e) {
   // console.dir(selectTab);
@@ -102,16 +112,20 @@ selectTab.addEventListener('click', function (e) {
   //   selectTab.children[ci].className = '';
   // }
   //  e.target.parentNode.className = 'active';
+  tabElement.forEach(function (sc) {
+    // console.log(sc.id);
+    // console.dir(e.target.parentNode.id);
+    // console.log(sc);
 
-  tabSelect(e);
+    sc.classList.remove('active');
 
-  if (e.target.parentNode.id === 'active') {
-    const aciveList = todos.filter(function (todo) {
-      return !todo.completed;
-    });
-    renderHTML();
-    console.dir(e.target);
-  }
+    if (sc.id === e.target.parentNode.id) {
+      sc.classList.add('active');
+      state = sc.id;
+      // console.log(state);
+    }
+  });
+  renderHTML();
 });
 
 window.addEventListener('load', function () {
