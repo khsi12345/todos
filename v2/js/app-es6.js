@@ -104,7 +104,7 @@ tabList.addEventListener('click', (e) => {
       select.classList.add('active');
       status = select.id;
     }
-  // console.dir(status);
+    console.dir(select);
   });
   renderHTML();
 });
@@ -112,4 +112,4 @@ tabList.addEventListener('click', (e) => {
 document.querySelector('#btn-removeCompletedTodos').addEventListener('click', () => {
   removeCompleted();
   renderHTML();
-})
+});
